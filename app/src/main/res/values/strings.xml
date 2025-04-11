@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">foodtrack</string>
+    <string name="app_name">FoodTrack</string>
+    <string name="app_logo">App logo</string>
+    <string name="email">Email</string>
+    <string name="password">Jelszó</string>
+    <string name="password_again">Jelszó ismét</string>
+    <string name="login">Bejelentkezés</string>
+    <string name="logout">Kijelentkezés</string>
+    <string name="register">Regisztráció</string>
+    <string name="cancel">Mégse</string>
 </resources>

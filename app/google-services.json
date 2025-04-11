@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "84844453362",
+    "project_id": "foodtrack-bd897",
+    "storage_bucket": "foodtrack-bd897.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84844453362:android:ba7ff581a2ae94f0f9df6b",
+        "android_client_info": {
+          "package_name": "com.example.foodtrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwwwVAqzxXLdMGnxKpfYoxxEzenOH0njg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -20,6 +20,7 @@ public class DashboardActivity extends AppCompatActivity {
     private static final String LOG_TAG = DashboardActivity.class.getName();
     private static final String PREF_KEY = DashboardActivity.class.getPackage().toString();
     private FirebaseUser user;
+    private boolean isFromMain = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,8 @@ public class DashboardActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Nem hitelesített felhasználó!");
             finish();
         }
+
+        isFromMain = getIntent().getBooleanExtra("from_main", false);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,6 +73,13 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isFromMain) {
+            super.onBackPressed();
+        }
     }
 
     @Override

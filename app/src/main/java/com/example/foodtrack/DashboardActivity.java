@@ -70,6 +70,20 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
             return true;
+        } else if (id == R.id.dashboardButton) {
+            Log.d(LOG_TAG, "Dashboard buttom clicked!");
+            Intent intent = new Intent(this, DashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return true;
+        }else if (id == R.id.profileButton) {
+            Log.d(LOG_TAG, "Profil buttom clicked!");
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -85,7 +99,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(LOG_TAG, "onDestroy");
+        Log.i(LOG_TAG, LOG_TAG + "onDestroy");
     }
 
 }

@@ -7,4 +7,14 @@
         android:title="@string/logout"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/dashboardButton"
+        android:title="Dashboard"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/profileButton"
+        android:title="Profil"
+        app:showAsAction="ifRoom" />
+
 </menu>

@@ -8,4 +8,34 @@
     <string name="logout">Kijelentkezés</string>
     <string name="register">Regisztráció</string>
     <string name="cancel">Mégse</string>
+    <string name="giving_custom_values">Személyre szabott működés</string>
+    <string name="system_calc_default_values">A rendszer jelenleg alapértelmezett napi tápanyag értékekkel számol.</string>
+    <string name="system_calc_custom_values">A rendszer az adatok alapján ki fogja számítani a szükséges napi tápanyag értékeket.</string>
+    <string name="sex">Nem:</string>
+    <string name="male">Férfi</string>
+    <string name="female">Nő</string>
+    <string name="age">Életkor</string>
+    <string name="height_cm">Magasság (cm)</string>
+    <string name="weight_kg">Testsúly (kg)</string>
+    <string name="goal">Cél:</string>
+    <string name="lose_weight">Fogyás</string>
+    <string name="maintain_weight">Súlymegtartás</string>
+    <string name="gain_weight">Hízás</string>
+    <string name="activity_level">Aktivitás:</string>
+    <string name="save">Mentés</string>
+    <string name="delete_user">Fiók törlése</string>
+    <string-array name="activity_display">
+        <item>Ülő életmód</item>
+        <item>Könnyű aktivitás</item>
+        <item>Mérsékelt aktivitás</item>
+        <item>Nagyon aktív</item>
+        <item>Extrém aktív</item>
+    </string-array>
+    <string-array name="activity_keys">
+        <item>sedentary</item>
+        <item>easy</item>
+        <item>moderate</item>
+        <item>very</item>
+        <item>extremely</item>
+    </string-array>
 </resources>

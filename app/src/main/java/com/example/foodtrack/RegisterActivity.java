@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         String secret_key = getIntent().getStringExtra("SECRET_KEY");
-        if(!secret_key.equals(SECRET_KEY)){
+        if(!Objects.equals(secret_key, SECRET_KEY)){
             finish();
         }
 

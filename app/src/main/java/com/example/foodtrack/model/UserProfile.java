@@ -1,10 +1,10 @@
 package com.example.foodtrack.model;
 
 public class UserProfile {
-    private static final int DEFAULT_CALORIES = 2000;
-    private static final int DEFAULT_PROTEIN = 100;
-    private static final int DEFAULT_CARBS = 250;
-    private static final int DEFAULT_FAT = 67;
+    public static final int DEFAULT_CALORIES = 2000;
+    public static final int DEFAULT_PROTEIN = 100;
+    public static final int DEFAULT_CARBS = 250;
+    public static final int DEFAULT_FAT = 67;
     public boolean isCustom;
     public String sex;
     public int age;

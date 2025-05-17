@@ -19,18 +19,17 @@ public class TestDataUploader {
         addLogEntry(db, userId, "2025-05-17", "lunch", "2sqSlR3vGe5YkcEhWj4q", 180);
     }
 
-    private static void addLogEntry(FirebaseFirestore db, String userId, String date,
-                                    String category, String foodId, int amount) {
+    private static void addLogEntry(FirebaseFirestore db, String userId, String date, String category, String foodId, int amount) {
 
         Map<String, Object> logEntry = new HashMap<>();
         logEntry.put("foodRef", db.collection("foods").document(foodId));
         logEntry.put("amount", amount);
+        logEntry.put("category", category);
+        logEntry.put("date", date);
 
         db.collection("users")
                 .document(userId)
                 .collection("logs")
-                .document(date)
-                .collection(category)
                 .add(logEntry) // random logId generálás
                 .addOnSuccessListener(documentReference ->
                         System.out.println("Sikeres log hozzáadás: " + documentReference.getId()))

@@ -8,6 +8,7 @@
     <string name="logout">Kijelentkezés</string>
     <string name="register">Regisztráció</string>
     <string name="cancel">Mégse</string>
+    <string name="back">Vissza</string>
     <string name="giving_custom_values">Személyre szabott működés</string>
     <string name="system_calc_default_values">A rendszer jelenleg alapértelmezett napi tápanyag értékekkel számol.</string>
     <string name="system_calc_custom_values">A rendszer az adatok alapján ki fogja számítani a szükséges napi tápanyag értékeket.</string>
@@ -38,4 +39,19 @@
         <item>very</item>
         <item>extremely</item>
     </string-array>
+    <string name="nutrition_display">%1$d / %2$dg</string>
+    <string name="totalCal_display">%1$d / %2$d kcal</string>
+    <string name="mealCal_display">%1$d kcal</string>
+    <string name="mealItemCardAmountAndCalories">%1$dg - %2$d kcal</string>
+    <string name="mealItemCardNutrition">%1$dg</string>
+    <string name="calorie">Kalória</string>
+    <string name="protein">Fehérje</string>
+    <string name="carb">Szénhidrát</string>
+    <string name="fat">Zsír</string>
+    <string name="breakfast">Reggeli</string>
+    <string name="lunch">Ebéd</string>
+    <string name="dinner">Vacsora</string>
+    <string name="snack">Snack</string>
+    <string name="previous_day">Előző nap</string>
+    <string name="next_day">Következő nap</string>
 </resources>

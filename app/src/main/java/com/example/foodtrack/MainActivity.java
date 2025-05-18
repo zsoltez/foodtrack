@@ -140,4 +140,11 @@ public class MainActivity extends AppCompatActivity {
         Log.i(LOG_TAG, LOG_TAG + "onRestart");
     }
 
+    @SuppressWarnings("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // Visszalépés letiltva – csak a saját gomb engedélyezett
+        // super.onBackPressed(); // Nem hívjuk meg szándékosan!
+    }
+
 }

@@ -4,27 +4,12 @@
     android:viewportWidth="256"
     android:viewportHeight="256">
   <path
-      android:pathData="M127.86,254.31C58.13,254.31 1.41,197.58 1.41,127.86C1.41,58.13 58.13,1.41 127.86,1.41c69.72,0 126.45,56.73 126.45,126.45C254.31,197.58 197.58,254.31 127.86,254.31z"
-      android:strokeLineJoin="miter"
-      android:strokeWidth="2.81"
-      android:fillColor="#FF0000"
-      android:fillType="nonZero"
-      android:strokeColor="#00000000"
-      android:strokeLineCap="butt"/>
+      android:pathData="M38.44,217.27C-10.86,167.97 -10.86,87.75 38.44,38.44C87.75,-10.86 167.97,-10.86 217.27,38.44c49.3,49.3 49.3,129.52 0,178.83C167.97,266.57 87.75,266.57 38.44,217.27z"
+      android:fillColor="#FF0000"/>
   <path
-      android:pathData="M127.86,199.38c-7.76,0 -14.05,-6.29 -14.05,-14.05L113.81,70.38c0,-7.76 6.29,-14.05 14.05,-14.05c7.76,0 14.05,6.29 14.05,14.05l0,114.95C141.91,193.09 135.62,199.38 127.86,199.38z"
-      android:strokeLineJoin="miter"
-      android:strokeWidth="2.81"
-      android:fillColor="#FFFFFF"
-      android:fillType="nonZero"
-      android:strokeColor="#00000000"
-      android:strokeLineCap="butt"/>
+      android:pathData="M77.28,178.43c-5.49,-5.49 -5.49,-14.38 -0,-19.87L158.57,77.28c5.49,-5.49 14.38,-5.49 19.87,-0c5.49,5.49 5.49,14.38 0,19.87l-81.28,81.28C91.66,183.92 82.77,183.92 77.28,178.43z"
+      android:fillColor="#FFFFFF"/>
   <path
-      android:pathData="M185.33,141.91L70.38,141.91c-7.76,0 -14.05,-6.29 -14.05,-14.05c0,-7.76 6.29,-14.05 14.05,-14.05l114.95,0c7.76,0 14.05,6.29 14.05,14.05C199.38,135.62 193.09,141.91 185.33,141.91z"
-      android:strokeLineJoin="miter"
-      android:strokeWidth="2.81"
-      android:fillColor="#FFFFFF"
-      android:fillType="nonZero"
-      android:strokeColor="#00000000"
-      android:strokeLineCap="butt"/>
+      android:pathData="M158.56,178.43L77.28,97.15c-5.49,-5.49 -5.49,-14.38 -0,-19.87c5.49,-5.49 14.38,-5.49 19.87,-0l81.28,81.28c5.49,5.49 5.49,14.38 0,19.87C172.94,183.92 164.05,183.92 158.56,178.43z"
+      android:fillColor="#FFFFFF"/>
 </vector>

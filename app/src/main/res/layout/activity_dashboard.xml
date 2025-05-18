@@ -173,6 +173,16 @@
                 <include layout="@layout/item_meal_card" android:id="@+id/snackCard" />
             </LinearLayout>
 
+<!--            <Button-->
+<!--                android:id="@+id/exportButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:onClick="exportButtonPressed"-->
+<!--                android:text="Utolsó 7 nap exportálása CSV-be"-->
+<!--                android:layout_marginVertical="20dp"-->
+<!--                android:layout_gravity="center_horizontal" >-->
+<!--            </Button>-->
+
         </LinearLayout>
     </ScrollView>
 

@@ -1,7 +1,13 @@
 package com.example.foodtrack;
 
+import android.Manifest;
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,6 +27,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodtrack.model.UserProfile;
+import com.example.foodtrack.service.AlarmUtils;
+import com.example.foodtrack.service.NotificationHelper;
+import com.example.foodtrack.util.DefaultMenu;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -32,6 +42,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +54,7 @@ public class DashboardActivity extends AppCompatActivity {
     private static final String PREF_KEY = DashboardActivity.class.getPackage().toString();
     private static final String SECRET_KEY = "h7pACEh9MXz2";
     private FirebaseUser user;
-    String userId;
+    private String userId;
     private FirebaseFirestore db;
     private boolean isFromMain = false;
     private LocalDate selectedDate;
@@ -56,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView breakfastCalValue, lunchCalValue, dinnerCalValue, snackCalValue, totalCaloriesValue;
     private TextView breakfastText, lunchText, dinnerText, snackText;
     private PieChart calorieDonutChart;
+    private NotificationHelper mNotificationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +111,23 @@ public class DashboardActivity extends AppCompatActivity {
         setupViews();
         setupListeners();
         loadLogsForDate(selectedDate);
+
+        // Értesítés engedélykérése
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
+
+        // Napi értesítés beállítása
+        mNotificationHelper = new NotificationHelper(this);
+        AlarmUtils.scheduleDailyAlarm(this);
+
+        // Etelek feltoltese - ne futtasd
+//        new TestFoodDatabaseUploader(this, db);
+
+        // Teszt adatok feltoltese a jelenlegi userhez
+//        new TestDataUploader(userId, db, LocalDate.now());
 
     }
 
@@ -175,7 +205,7 @@ public class DashboardActivity extends AppCompatActivity {
         intent.putExtra("mealType", category);
         intent.putExtra("date", selectedDate.toString());
         intent.putExtra("SECRET_KEY", SECRET_KEY);
-        startActivity(intent);
+        startActivityForResult(intent, 101);
     }
 
     private void updateDateText() {
@@ -328,6 +358,45 @@ public class DashboardActivity extends AppCompatActivity {
 
         String snackText = getString(R.string.mealCal_display, calorieSnack);
         snackCalValue.setText(snackText);
+
+        notificationForReachingLimit(calories, goalCalories);
+    }
+
+    private void notificationForReachingLimit(int calories, int goalCalories) {
+        Log.i(LOG_TAG, "Calories: " + calories + " GoalCalories: " + goalCalories);
+        SharedPreferences prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        LocalDate today = LocalDate.now();
+        String todayString = today.toString();
+        String todayKey = "cal_goal_notified_" + todayString;
+
+        if (!selectedDate.equals(today)) {
+            return;
+        }
+
+        // Töröljük az összes korábbi napi kulcsot, ami "cal_goal_notified_"-tel kezdődik
+        for (String key : prefs.getAll().keySet()) {
+            if (key.startsWith("cal_goal_notified_") && !key.equals(todayKey)) {
+                editor.remove(key);
+            }
+        }
+
+        if (prefs.contains(todayKey) && selectedDate.equals(today) && calories < goalCalories) {
+            editor.remove(todayKey);
+            editor.apply();
+        }
+
+        // Értesítés csak ha még nem volt ma
+        if (!prefs.contains(todayKey)) {
+            if (calories >= goalCalories && calories < goalCalories + 100) {
+                mNotificationHelper.calorieLimitNotification("Gratulálunk! Elérted a napi kalóriacélod!");
+                editor.putString(todayKey, "reached").apply();
+            } else if (calories >= goalCalories + 100) {
+                mNotificationHelper.calorieLimitNotification("Vigyázz! Túllépted a napi kalóriakereted!");
+                editor.putString(todayKey, "reached").apply();
+            }
+        }
     }
 
     private void renderPieChart(int calories, int goalCalories) {
@@ -371,41 +440,32 @@ public class DashboardActivity extends AppCompatActivity {
         return true;
     }
 
+    // Menü
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.logoutButton) {
-            Log.d(LOG_TAG, "Log out clicked!");
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            return true;
-        } else if (id == R.id.dashboardButton) {
-            Log.d(LOG_TAG, "Dashboard buttom clicked!");
-            Intent intent = new Intent(this, DashboardActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            return true;
-        }else if (id == R.id.profileButton) {
-            Log.d(LOG_TAG, "Profil buttom clicked!");
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (DefaultMenu.handleMenuSelection(this, item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        if (!isFromMain) {
-            super.onBackPressed();
+//        if (!isFromMain) {
+//            super.onBackPressed();
+//        }
+//        Számndékosan tiltva, csak a menügombok működjenek
+    }
+
+    // Ha volt módosítás a MealLogActivityben
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 101 && resultCode == MealLogActivity.RESULT_OK) {
+            Log.i(LOG_TAG, " - onActivityResult");
+            loadLogsForDate(selectedDate);
         }
     }
 
@@ -433,7 +493,7 @@ public class DashboardActivity extends AppCompatActivity {
         Log.i(LOG_TAG, LOG_TAG + " - onPause");
     }
 
-    // Képernyő forgatásnál megőrzi a választott dátumot
+    // pl: képernyő forgatásnál megőrzi a választott dátumot
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -452,5 +512,77 @@ public class DashboardActivity extends AppCompatActivity {
         super.onRestart();
         Log.i(LOG_TAG, LOG_TAG + " - onRestart");
     }
-    
+
+
+// TODO - Heti lista exportálása
+//
+//    public void exportButtonPressed(View view) {
+//        LocalDate today = LocalDate.now();
+//        LocalDate oneWeekAgo = today.minusDays(6); // mai nap + 6 nap vissza
+//
+//        db.collection("users").document(userId).collection("logs")
+//                .whereGreaterThanOrEqualTo("date", oneWeekAgo.toString())
+//                .whereLessThanOrEqualTo("date", today.toString())
+//                .get()
+//                .addOnSuccessListener(logs -> {
+//                    StringBuilder csvBuilder = new StringBuilder();
+//                    csvBuilder.append("Dátum,Kategória,Név,Márka,Mennyiség (g),Kalória (kcal),Fehérje (g),Szénhidrát (g),Zsír (g)\n");
+//
+//                    List<Task<DocumentSnapshot>> foodTasks = new ArrayList<>();
+//                    List<DocumentSnapshot> logDocs = new ArrayList<>();
+//
+//                    for (DocumentSnapshot log : logs) {
+//                        DocumentReference foodRef = log.getDocumentReference("foodRef");
+//                        if (foodRef != null) {
+//                            foodTasks.add(foodRef.get());
+//                            logDocs.add(log);
+//                        }
+//                    }
+//
+//                    Tasks.whenAllSuccess(foodTasks).addOnSuccessListener(results -> {
+//                        for (int i = 0; i < results.size(); i++) {
+//                            DocumentSnapshot foodDoc = (DocumentSnapshot) results.get(i);
+//                            DocumentSnapshot log = logDocs.get(i);
+//
+//                            String date = log.getString("date");
+//                            String category = log.getString("category");
+//                            double amount = log.getDouble("amount") != null ? log.getDouble("amount") : 0.0;
+//
+//                            String name = foodDoc.getString("name");
+//                            String brand = foodDoc.getString("brand");
+//                            double caloriesPer100 = foodDoc.getDouble("calories") != null ? foodDoc.getDouble("calories") : 0.0;
+//                            double proteinPer100 = foodDoc.getDouble("protein") != null ? foodDoc.getDouble("protein") : 0.0;
+//                            double carbsPer100 = foodDoc.getDouble("carbs") != null ? foodDoc.getDouble("carbs") : 0.0;
+//                            double fatPer100 = foodDoc.getDouble("fat") != null ? foodDoc.getDouble("fat") : 0.0;
+//
+//                            int calories = (int) Math.round(caloriesPer100 * amount / 100.0);
+//                            int protein = (int) Math.round(proteinPer100 * amount / 100.0);
+//                            int carbs = (int) Math.round(carbsPer100 * amount / 100.0);
+//                            int fats = (int) Math.round(fatPer100 * amount / 100.0);
+//
+//                            csvBuilder.append(String.format(
+//                                    "%s,%s,%.0f,%s,%s,%d,%d,%d,%d\n",
+//                                    date, category, amount, name, brand, calories, protein, carbs, fats
+//                            ));
+//                        }
+//
+//                        // Fileba írás
+//                        try {
+//                            String fileName = "foodtrack_export.csv";
+//                            File file = new File(getExternalFilesDir(null), fileName);
+//                            FileWriter writer = new FileWriter(file);
+//                            writer.write(csvBuilder.toString());
+//                            writer.close();
+//                            Log.i(LOG_TAG, "Export sikeres: " + file.getAbsolutePath());
+//                            Toast.makeText(this, "Sikeres exportálás:\n" + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+//                        } catch (Exception e) {
+//                            Log.e(LOG_TAG, "Hiba exportálás közben: " + e.getMessage());
+//                        }
+//                    });
+//                })
+//                .addOnFailureListener(e -> {
+//                    Toast.makeText(this, "Hiba az exportálás során, próbálja újra!", Toast.LENGTH_SHORT).show();
+//                    Log.e(LOG_TAG, "Hiba exportálás közben: " + e.getMessage());
+//                });
+//    }
 }

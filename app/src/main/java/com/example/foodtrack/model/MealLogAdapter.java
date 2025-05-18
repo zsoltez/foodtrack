@@ -1,14 +1,17 @@
 package com.example.foodtrack.model;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodtrack.MealLogActivity;
 import com.example.foodtrack.R;
 
 import java.util.List;
@@ -31,7 +34,7 @@ public class MealLogAdapter extends RecyclerView.Adapter<MealLogAdapter.ViewHold
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(MealLogAdapter.ViewHolder holder, int position) {
         MealLogItem item = items.get(position);
         holder.bindTo(item);
     }
@@ -41,8 +44,9 @@ public class MealLogAdapter extends RecyclerView.Adapter<MealLogAdapter.ViewHold
         return items.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView foodName, brand, amountAndCalories, protein, carbs, fat;
+        private ImageButton deleteButton, modifyButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,6 +57,9 @@ public class MealLogAdapter extends RecyclerView.Adapter<MealLogAdapter.ViewHold
             protein = itemView.findViewById(R.id.proteinText);
             carbs = itemView.findViewById(R.id.carbText);
             fat = itemView.findViewById(R.id.fatText);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
+            modifyButton = itemView.findViewById(R.id.modifyButton);
+
         }
 
         public void bindTo(MealLogItem currentItem) {
@@ -70,6 +77,23 @@ public class MealLogAdapter extends RecyclerView.Adapter<MealLogAdapter.ViewHold
 
             String fatText = itemView.getContext().getString(R.string.fat) + " - " + itemView.getContext().getString(R.string.mealItemCardNutrition, currentItem.fat);
             fat.setText(fatText);
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Activity", "Add cart button clicked!");
+                    ((MealLogActivity)mContext).deleteLogItemButtonPressed(currentItem.logId);
+                }
+            });
+
+            modifyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Activity", "Add cart button clicked!");
+                    ((MealLogActivity)mContext).modifyLogItemButtonPressed(currentItem.logId);
+                }
+            });
+
         }
 
     }

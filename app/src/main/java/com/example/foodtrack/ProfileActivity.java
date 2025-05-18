@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +29,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodtrack.model.UserProfile;
 import com.example.foodtrack.util.DecimalDigitsInputFilter;
+import com.example.foodtrack.util.DefaultMenu;
 import com.example.foodtrack.util.NutritionCalculator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -72,6 +75,14 @@ public class ProfileActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            return insets;
+        });
+
+        View rootView = findViewById(R.id.main);
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0, 0, 0, systemBars.bottom);
             return insets;
         });
 
@@ -173,10 +184,10 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
             Map<String, Integer> result = NutritionCalculator.calculateDaily(sex, age, height, weight, goal, activity);
-            calories = result.get("daily_calories");
-            protein = result.get("daily_protein");
-            carbs = result.get("daily_carbs");
-            fat = result.get("daily_fats");
+            calories = result.get("daily_calories") != null ? result.get("daily_calories") : 0;
+            protein = result.get("daily_protein") != null ? result.get("daily_protein") : 0;
+            carbs = result.get("daily_carbs") != null ? result.get("daily_carbs") : 0;
+            fat = result.get("daily_fats") != null ? result.get("daily_fats") : 0;
             profile = UserProfile.createCustomProfile(sex, age, height, weight, goal, activity, calories, protein, carbs, fat);
         } else {
             profile = UserProfile.createDefaultProfile();
@@ -202,34 +213,12 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    // Menü
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.logoutButton) {
-            Log.d(LOG_TAG, "Log out clicked!");
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            return true;
-        } else if (id == R.id.dashboardButton) {
-            Log.d(LOG_TAG, "Dashboard buttom clicked!");
-            Intent intent = new Intent(this, DashboardActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            return true;
-        }else if (id == R.id.profileButton) {
-            Log.d(LOG_TAG, "Profil buttom clicked!");
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (DefaultMenu.handleMenuSelection(this, item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -253,8 +242,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void deleteUserFromFirebase() {
-        FirebaseFirestore.getInstance().collection("users").document(userId)
-                .collection("userprofile").document("profile").delete()
+        db.collection("users").document(userId).delete()
                 .addOnSuccessListener(aVoid -> {
                     user.delete()
                             .addOnSuccessListener(unused -> {
@@ -331,5 +319,11 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    @SuppressWarnings("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // Visszalépés letiltva – csak a saját gomb engedélyezett
+        // super.onBackPressed(); // Nem hívjuk meg szándékosan!
+    }
 
 }

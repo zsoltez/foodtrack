@@ -10,7 +10,7 @@
     <string name="cancel">Mégse</string>
     <string name="back">Vissza</string>
     <string name="giving_custom_values">Személyre szabott működés</string>
-    <string name="system_calc_default_values">A rendszer alapértelmezett napi tápanyag értékeket használja.</string>
+    <string name="system_calc_default_values">A rendszer az alapértelmezett napi tápanyag értékeket használja.</string>
     <string name="system_calc_custom_values">A rendszer az adatok alapján számítja a szükséges napi tápanyag értékeket.</string>
     <string name="sex">Nem:</string>
     <string name="male">Férfi</string>

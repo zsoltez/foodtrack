@@ -44,7 +44,7 @@ Szia! Probléma esetén kérlek írj CooSpacen (Szente Zsolt - LFGISW). Összegy
 ### Lifecycle Hook használat
 - `onSaveInstanceState()`: `DashboardActivity.java` – **498. sor**
 - `onPause()`: `MainActivity.java` – **124. sor**
-- `onStop()`: `MainActivity.java` – **131. sor**
+- `onResume()`: `MainActivity.java` – **131. sor**
 
 ---
 

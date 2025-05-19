@@ -83,5 +83,5 @@ Szia! Probléma esetén kérlek írj CooSpacen (Szente Zsolt - LFGISW). Összegy
 
 ---
 
-### Ha a vonalkód leolvasását szeretnéd tesztelni telefonnal, itt az egyik termék vonalkódja:
+### Ha a vonalkód beolvasását szeretnéd tesztelni telefonnal, itt az egyik termék vonalkódja:
 ![Barcode](ProteinBarBarcode.png)

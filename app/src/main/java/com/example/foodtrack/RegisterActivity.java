@@ -12,13 +12,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.foodtrack.model.UserProfile;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String LOG_TAG = RegisterActivity.class.getName();
     private static final String PREF_KEY = RegisterActivity.class.getPackage().toString();
     private static final String SECRET_KEY = "h7pACEh9MXz2";
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     EditText emailEditText;
     EditText passwordEditText;
@@ -37,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         String secret_key = getIntent().getStringExtra("SECRET_KEY");
-        if(!secret_key.equals(SECRET_KEY)){
+        if(!Objects.equals(secret_key, SECRET_KEY)){
             finish();
         }
 
@@ -52,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordEditText.setText(password);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
     }
 
@@ -77,18 +84,44 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-            if(task.isSuccessful()){
-                Log.d(LOG_TAG, "Sikeres regisztráció.");
-                Log.i(LOG_TAG, "Regisztrált email: " + email + ", jelszó: " + password);
-                Toast.makeText(RegisterActivity.this, "Sikeres regisztráció! Kérlek jelentkezz be!", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                Log.d(LOG_TAG, "Sikertelen regisztráció. Hiba: " + task.getException().getMessage());
-                Toast.makeText(RegisterActivity.this, "Sikertelen regisztráció.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
+
+                    String userId = Objects.requireNonNull(authResult.getUser()).getUid();
+                    UserProfile defaultProfile = UserProfile.createDefaultProfile();
+
+                    FirebaseFirestore.getInstance().collection("users").document(userId)
+                            .collection("userprofile").document("profile").set(defaultProfile)
+                            .addOnSuccessListener(unused -> {
+                                Log.d(LOG_TAG, "Sikeres regisztráció.");
+                                Log.i(LOG_TAG, "Regisztrált email: " + email + ", jelszó: " + password);
+                                Toast.makeText(RegisterActivity.this, "Sikeres regisztráció! Kérlek jelentkezz be!", Toast.LENGTH_SHORT).show();
+                                setResult(RESULT_OK);
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(LOG_TAG, "Profil mentése sikertelen", e);
+
+                                // Fiók törlése, ha a profilt nem sikerül létrehozni
+                                FirebaseUser createdUser = authResult.getUser();
+                                if (createdUser != null) {
+                                    createdUser.delete()
+                                            .addOnSuccessListener(aVoid -> {
+                                                Log.i(LOG_TAG, "Felhasználó törölve Firestore hiba miatt.");
+                                                Toast.makeText(RegisterActivity.this, "Hiba történt, próbáld újra.", Toast.LENGTH_SHORT).show();
+                                            })
+                                            .addOnFailureListener(deleteError -> {
+                                                Log.e(LOG_TAG, "Felhasználó törlése nem sikerült!", deleteError);
+                                                Toast.makeText(RegisterActivity.this, "Hiba történt, próbáld újra.", Toast.LENGTH_SHORT).show();
+                                            });
+                                }
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(LOG_TAG, "Sikertelen regisztráció. Hiba: " + e.getMessage());
+                    Toast.makeText(RegisterActivity.this, "Sikertelen regisztráció.", Toast.LENGTH_SHORT).show();
+                });
+
     }
 
     public void cancel(View view) {

@@ -105,39 +105,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i(LOG_TAG, "onStart");
+        Log.i(LOG_TAG, LOG_TAG + "onStart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i(LOG_TAG, "onStop");
+        Log.i(LOG_TAG, LOG_TAG + "onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(LOG_TAG, "onDestroy");
+        Log.i(LOG_TAG, LOG_TAG + "onDestroy");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(LOG_TAG, "onPause");
+        Log.i(LOG_TAG, LOG_TAG + "onPause");
         handler.removeCallbacks(scaleLogoRunnable);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(LOG_TAG, "onResume");
+        Log.i(LOG_TAG, LOG_TAG + "onResume");
         handler.postDelayed(scaleLogoRunnable, 1000);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.i(LOG_TAG, "onRestart");
+        Log.i(LOG_TAG, LOG_TAG + "onRestart");
+    }
+
+    @SuppressWarnings("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // Visszalépés letiltva – csak a saját gomb engedélyezett
+        // super.onBackPressed(); // Nem hívjuk meg szándékosan!
     }
 
 }

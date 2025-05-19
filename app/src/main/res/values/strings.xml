@@ -8,4 +8,51 @@
     <string name="logout">Kijelentkezés</string>
     <string name="register">Regisztráció</string>
     <string name="cancel">Mégse</string>
+    <string name="back">Vissza</string>
+    <string name="giving_custom_values">Személyre szabott működés</string>
+    <string name="system_calc_default_values">A rendszer az alapértelmezett napi tápanyag értékeket használja.</string>
+    <string name="system_calc_custom_values">A rendszer az adatok alapján számítja a szükséges napi tápanyag értékeket.</string>
+    <string name="sex">Nem:</string>
+    <string name="male">Férfi</string>
+    <string name="female">Nő</string>
+    <string name="age">Életkor</string>
+    <string name="height_cm">Magasság (cm)</string>
+    <string name="weight_kg">Testsúly (kg)</string>
+    <string name="goal">Cél:</string>
+    <string name="lose_weight">Fogyás</string>
+    <string name="maintain_weight">Súlymegtartás</string>
+    <string name="gain_weight">Hízás</string>
+    <string name="activity_level">Aktivitás:</string>
+    <string name="save">Mentés</string>
+    <string name="delete_user">Fiók törlése</string>
+    <string-array name="activity_display">
+        <item>Ülő életmód</item>
+        <item>Könnyű aktivitás</item>
+        <item>Mérsékelt aktivitás</item>
+        <item>Nagyon aktív</item>
+        <item>Extrém aktív</item>
+    </string-array>
+    <string-array name="activity_keys">
+        <item>sedentary</item>
+        <item>easy</item>
+        <item>moderate</item>
+        <item>very</item>
+        <item>extremely</item>
+    </string-array>
+    <string name="nutrition_display">%1$d / %2$dg</string>
+    <string name="totalCal_display">%1$d / %2$d kcal</string>
+    <string name="mealCal_display">%1$d kcal</string>
+    <string name="mealItemCardAmountAndCalories">%1$dg - %2$d kcal</string>
+    <string name="mealItemCardNutrition">%1$dg</string>
+    <string name="calorie">Kalória</string>
+    <string name="protein">Fehérje</string>
+    <string name="carb">Szénhidrát</string>
+    <string name="fat">Zsír</string>
+    <string name="breakfast">Reggeli</string>
+    <string name="lunch">Ebéd</string>
+    <string name="dinner">Vacsora</string>
+    <string name="snack">Snack</string>
+    <string name="previous_day">Előző nap</string>
+    <string name="next_day">Következő nap</string>
+    <string name="add_new">Új hozzáadása</string>
 </resources>
